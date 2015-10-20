@@ -1,5 +1,4 @@
 #!/bin/bash
-# -*- coding: utf-8 -*-
 # Michał Pomarański
 # grupa nr 3
 
@@ -10,3 +9,16 @@
 # writing a report showing start time, end time and quantity of data copied.
 # offering a choice of tar or rsync.
 # comparing the size of today's backup to yesterdays and sending the user an email of it changed significantly.
+
+SOURCE=~/Dev/Studia/
+DESTINATION=~/backup/Studia/
+
+# backup
+echo "Making a backup of $SOURCE in ${DESTINATION}..."
+day_of_week="$(date +'%A')"
+destination_with_week="${DESTINATION}$(basename $DESTINATION)_${day_of_week}"
+echo $destination_with_week
+mkdir -p $destination_with_week
+
+rsync -ra --delete $SOURCE $destination_with_week
+echo "Backup finished."
