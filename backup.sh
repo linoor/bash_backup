@@ -15,11 +15,12 @@ DESTINATION=~/backup/Studia/
 
 # backup
 echo "Making a backup of $SOURCE in ${DESTINATION}..."
-day_of_week="$(date +'%A')"
+date="$(date +'%A-%Y-%m-%d:%H:%M:%S')"
 destination_directory="$DESTINATION"
-destination_with_week="$destination_directory$(basename $DESTINATION)_${day_of_week}"
-echo $destination_with_week
-mkdir -p $destination_with_week
+destination_with_date="$destination_directory$(basename $DESTINATION)_$date"
+echo $destination_with_date
+mkdir -p $destination_with_date
 
-rsync -ra --delete $SOURCE $destination_with_week
+rsync -ra --delete $SOURCE $destination_with_date
+echo "Backup saved in $destination_with_date" 
 echo "Backup finished."
