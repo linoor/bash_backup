@@ -2,7 +2,7 @@
 # Michał Pomarański
 # grupa nr 3
 
-# A script doing a backup of /home folder, keeping up to 7 backups (for each day of the week) as history.
+# A script doing a backup of a given folder, keeping up to 7 backups (for each day of the week) as history.
 # Using rsync to perform the backup
 # checking for disk space before attempting the backup.
 # sending an email alert if there's no sufficient disk space.
