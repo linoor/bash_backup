@@ -9,6 +9,7 @@
 # writing a report showing start time, end time and quantity of data copied.
 # offering a choice of tar or rsync.
 # comparing the size of today's backup to yesterdays and sending the user an email of it changed significantly.
+# provide source and destination as arguments
 
 SOURCE=~/Dev/Studia/
 DESTINATION=~/backup/Studia/
