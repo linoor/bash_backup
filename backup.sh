@@ -16,7 +16,8 @@ DESTINATION=~/backup/Studia/
 # backup
 echo "Making a backup of $SOURCE in ${DESTINATION}..."
 day_of_week="$(date +'%A')"
-destination_with_week="${DESTINATION}$(basename $DESTINATION)_${day_of_week}"
+destination_directory="$DESTINATION"
+destination_with_week="$destination_directory$(basename $DESTINATION)_${day_of_week}"
 echo $destination_with_week
 mkdir -p $destination_with_week
 
