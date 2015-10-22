@@ -2,10 +2,6 @@
 # Michał Pomarański
 # grupa nr 3
 
-# A script doing a backup of a given folder, keeping up to 7 backups (for each day of the week) as history.
-# Using rsync to perform the backup
-# checking for disk space before attempting the backup.
-# sending an email alert if there's no sufficient disk space.
 # writing a report showing start time, end time and quantity of data copied.
 # offering a choice of tar or rsync.
 # comparing the size of today's backup to yesterdays and sending the user an email of it changed significantly.
@@ -13,6 +9,15 @@
 
 SOURCE=~/Dev/Studia/
 DESTINATION=~/backup/Studia/
+
+# check for the available space before doing the backup
+available_space=$(df -k . --block-size=1K | sed -n '2p' | tr -s ' ' | cut -d ' ' -f 4)
+backup_space_needed=$(du -sb $SOURCE | cut -f1)
+if [[ "$backup_space_needed" -gt "$available_space" ]]
+then
+	zenity --error --text "There is not enough space left to do the backup of $SOURCE"
+	exit
+fi
 
 # backup
 echo "Making a backup of $SOURCE in ${DESTINATION}..."
@@ -22,6 +27,7 @@ destination_directory="$DESTINATION"
 full_destination="$destination_directory$(basename $DESTINATION)_$date"
 mkdir -p $full_destination
 
+# actual backup
 rsync -ra --delete $SOURCE $full_destination
 echo "Backup saved in $full_destination" 
 
