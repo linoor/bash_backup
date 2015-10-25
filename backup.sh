@@ -11,7 +11,7 @@ SOURCE=~/Dev/Studia/
 DESTINATION=~/backup/Studia/
 
 function get_time_nanoseconds() {
-	local result=$(date +%N)
+	local result=$(date +%N | sed 's/^0*//')
 	echo $result
 }
 
@@ -57,4 +57,4 @@ done
 
 end_time_nano=$(get_time_nanoseconds)
 end_time=$(get_time)
-echo "Backup finished. End time: $end_time. Time elapsed: $(($end_time_nano-$start_time_nano))"
+echo "Backup finished. End time: $end_time. Time elapsed in nanoseconds: $(($end_time_nano-$start_time_nano))"
