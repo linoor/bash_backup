@@ -10,6 +10,20 @@
 SOURCE=~/Dev/Studia/
 DESTINATION=~/backup/Studia/
 
+function get_time_nanoseconds() {
+	local result=$(date +%N)
+	echo $result
+}
+
+function get_time() {
+	local result=$(date +%H:%M:%S:%N)
+	echo $result
+}
+
+start_time_nano=$(get_time_nanoseconds)
+start_time=$(get_time)
+echo "Starting backup at $start_time"
+
 # check for the available space before doing the backup
 available_space=$(df -k . --block-size=1K | sed -n '2p' | tr -s ' ' | cut -d ' ' -f 4)
 backup_space_needed=$(du -sb $SOURCE | cut -f1)
@@ -41,4 +55,6 @@ for i in "$destination_directory$(basename $DESTINATION)_$day_of_week*"; do
 	done
 done
 
-echo "Backup finished."
+end_time_nano=$(get_time_nanoseconds)
+end_time=$(get_time)
+echo "Backup finished. End time: $end_time. Time elapsed: $(($end_time_nano-$start_time_nano))"
