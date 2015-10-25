@@ -2,13 +2,35 @@
 # Michał Pomarański
 # grupa nr 3
 
-# writing a report showing start time, end time and quantity of data copied.
 # offering a choice of tar or rsync.
 # comparing the size of today's backup to yesterdays and sending the user an email of it changed significantly.
 # provide source and destination as arguments
 
 SOURCE=~/Dev/Studia/
 DESTINATION=~/backup/Studia/
+
+usage="$(basename "$0") [-h] [--help] -- Program robiący kopię zapasową pod
+
+where:
+    -h, --help  show this help text"
+
+option="$1"
+echo $option
+case "$option" in
+--help) echo "$usage"
+	exit
+	;;
+-h) echo "$usage"
+	exit
+	;;
+--h) echo "$usage"
+	exit
+	;;
+-*) printf "illegal option: -%s\n" "$OPTARG" >&2
+   echo "$usage" >&2
+   exit 1
+   ;;
+esac
 
 function get_time_nanoseconds() {
 	local result=$(date +%N | sed 's/^0*//')
