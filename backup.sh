@@ -9,10 +9,12 @@
 SOURCE=~/Dev/Studia/
 DESTINATION=~/backup/Studia/
 
-usage="$(basename "$0") [-h] [--help] -- Program robiący kopię zapasową pod
+usage="$(basename "$0") [-h] [--help] [--source] [--dest] -- Program robiący kopię zapasową podanego folderu. 
 
-where:
-    -h, --help  show this help text"
+użycie:
+    -h, --help - pomoc
+	--source - folder, który ma zostać skopiowany.
+	--dest - folder, do którego ma być zrobiony backup."
 
 option="$1"
 echo $option
