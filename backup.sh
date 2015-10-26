@@ -15,7 +15,8 @@ użycie:
 	--dest - folder, do którego ma być zrobiony backup.
 "
 
-source ./helper.sh
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )"
+source $DIR/helper.sh
 
 option="$1"
 for option in "$@"
