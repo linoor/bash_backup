@@ -2,17 +2,17 @@
 # Michał Pomarański
 # grupa nr 3
 
-usage="$(basename "$0") [-h] [--help] [--source] [--dest] -- Program robiący kopię zapasową podanego folderu.\n
-Jako argumenty proszę podać folder, który ma zostać skopiowany oraz folder docelowy.
-Program sprawdza czy na dysku jest wystarczająco dużo wolnego miejsca, w przeciwnym wypadku powiadamia o tym użytkownika.
-
-Program może zostać uruchomiony jako zadanie cron (np.  0 22 * * * ./backup --source=folder --dest=folder2).
-Dzięki temu, skrypt będzie uruchamiany raz dziennie. Skrypt nadpisuje kopię zrobioną tego samego dnia (zachowuje jedną kopię na jeden dzień tygodnia).
-
-użycie:
-    -h, --help - pomoc
-	--source - folder, który ma zostać skopiowany.
-	--dest - folder, do którego ma być zrobiony backup.
+set usage =  "`basename $0` -h --help --source --dest -- Program robiący kopię zapasową podanego folderu.\n\
+Jako argumenty proszę podać folder, który ma zostać skopiowany oraz folder docelowy.\n\
+Program sprawdza czy na dysku jest wystarczająco dużo wolnego miejsca, w przeciwnym wypadku powiadamia o tym użytkownika.\n\
+\n\
+Program może zostać uruchomiony jako zadanie cron (np.  0 22 7 3 3 ./backup --source=folder --dest=folder2).\n\
+Dzięki temu, skrypt będzie uruchamiany raz dziennie. Skrypt nadpisuje kopię zrobioną tego samego dnia (zachowuje jedną kopię na jeden dzień tygodnia).\n\
+\n\
+użycie:\n\
+    -h, --help - pomoc\n\
+	--source - folder, który ma zostać skopiowany.\n\
+	--dest - folder, do którego ma być zrobiony backup.\n\
 "
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )"
