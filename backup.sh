@@ -39,27 +39,13 @@ do
 	esac
 done
 
-SOURCE=$src
-DESTINATION=$dest
+SOURCE="$src"
+DESTINATION="$dest"
 
-if [ -z "$SOURCE" ] ; then
-	printf "$usage"
-	exit 1
-fi
-
-echo $source
-# check if directories exist
-if [ ! -d "$SOURCE"  ] ; then
+if [ ! -d "$SOURCE"  ]
+then
 	echo "The source directory does not exist. Exiting..."	
 	exit 1
-fi
-
-debug=True
-
-if [[ $debug = true ]] ;
-then
-	SOURCE=~/Dev/Studia/
-	DESTINATION=~/backup/Studia/
 fi
 
 function get_time_nanoseconds() {
