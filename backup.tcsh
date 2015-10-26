@@ -46,7 +46,7 @@ set SOURCE="$src"
 set DESTINATION="$dest"
 
 if ( ! -d "$SOURCE"  ) then
-	printf "BŁĄD! Katalog źródłowy nie istnieje." >&2
+	printf "BŁĄD! Katalog źródłowy nie istnieje."
 	exit 1
 endif
 
