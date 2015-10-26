@@ -32,7 +32,7 @@ do
 		;;
 	--dest=*) dest="${option#*=}"
 		;;
-	-*) printff "illegal option: -%s\n" "$OPTARG" >&2
+	-*) printf "Niepoprawne argumenty\n\n" >&2
 	   printf "$usage" >&2
 	   exit 1
 	   ;;
@@ -44,7 +44,7 @@ DESTINATION="$dest"
 
 if [ ! -d "$SOURCE"  ]
 then
-	echo "The source directory does not exist. Exiting..."	
+	printf "BŁĄD! Katalog źródłowy nie istnieje." >&2
 	exit 1
 fi
 
@@ -60,7 +60,7 @@ function get_time() {
 
 start_time_nano=$(get_time_nanoseconds)
 start_time=$(get_time)
-echo "Starting backup at $start_time"
+echo "Rozpoczęcie kopiowania o godz. $start_time"
 
 # check for the available space before doing the backup
 available_space=$(df -k . --block-size=1K | sed -n '2p' | tr -s ' ' | cut -d ' ' -f 4)
@@ -68,12 +68,12 @@ backup_space_needed=$(du -sb $SOURCE | cut -f1)
 backup_space_in_mb=$(du -sb $SOURCE --block-size=1M | cut -f1)
 if [[ "$backup_space_needed" -gt "$available_space" ]]
 then
-	zenity --error --text "There is not enough space left to do the backup of $SOURCE"
+	zenity --error --text "Na dysku nie ma wystarczającej ilości wolnego miejsca w $SOURCE"
 	exit
 fi
 
 # backup
-echo "Making a backup of $SOURCE in ${DESTINATION}..."
+echo "Tworzenie kopii zapasowej $SOURCE w ${DESTINATION}..."
 date="$(date +'%A-%Y-%m-%d:%H:%M:%S')"
 day_of_week="$(date +'%A')"
 destination_directory="$DESTINATION"
@@ -82,7 +82,7 @@ mkdir -p $full_destination
 
 # actual backup
 rsync -ra --delete $SOURCE $full_destination
-echo "Backup saved in $full_destination" 
+echo "Kopia zapasowa zapisana w $full_destination" 
 
 # remove all of the other backups made on the same day (except the one made now)
 for i in "$destination_directory$(basename $DESTINATION)_$day_of_week*"; do
@@ -96,5 +96,5 @@ done
 
 end_time_nano=$(get_time_nanoseconds)
 end_time=$(get_time)
-echo "Backup finished. End time: $end_time. Time elapsed in nanoseconds: $(($end_time_nano-$start_time_nano))"
+echo "Tworzenie kopii zakończone. Czas zakończenia kopiowania: $end_time. Czas kopiowania: $(($end_time_nano-$start_time_nano)) nanosekund"
 echo "Skopiowano $backup_space_in_mb MB"
