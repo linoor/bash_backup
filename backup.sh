@@ -12,25 +12,55 @@ Dzięki temu, skrypt będzie uruchamiany raz dziennie. Skrypt nadpisuje kopię z
 użycie:
     -h, --help - pomoc
 	--source - folder, który ma zostać skopiowany.
-	--dest - folder, do którego ma być zrobiony backup."
+	--dest - folder, do którego ma być zrobiony backup.
+"
 
 option="$1"
-echo $option
-case "$option" in
---help) echo "$usage"
-	exit
-	;;
--h) echo "$usage"
-	exit
-	;;
---h) echo "$usage"
-	exit
-	;;
--*) printf "illegal option: -%s\n" "$OPTARG" >&2
-   echo "$usage" >&2
-   exit 1
-   ;;
-esac
+for option in "$@"
+do
+	case "$option" in
+	--help) printf "$usage"
+		exit
+		;;
+	-h) printf "$usage"
+		exit
+		;;
+	--h) printf "$usage"
+		exit
+		;;
+	--source=*) src="${option#*=}"
+		;;
+	--dest=*) dest="${option#*=}"
+		;;
+	-*) printff "illegal option: -%s\n" "$OPTARG" >&2
+	   printf "$usage" >&2
+	   exit 1
+	   ;;
+	esac
+done
+
+SOURCE=$src
+DESTINATION=$dest
+
+if [ -z "$SOURCE" ] ; then
+	printf "$usage"
+	exit 1
+fi
+
+echo $source
+# check if directories exist
+if [ ! -d "$SOURCE"  ] ; then
+	echo "The source directory does not exist. Exiting..."	
+	exit 1
+fi
+
+debug=True
+
+if [[ $debug = true ]] ;
+then
+	SOURCE=~/Dev/Studia/
+	DESTINATION=~/backup/Studia/
+fi
 
 function get_time_nanoseconds() {
 	local result=$(date +%N | sed 's/^0*//')
