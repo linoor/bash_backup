@@ -71,16 +71,16 @@ set destination_directory="$DESTINATION"
 set full_destination="$destination_directory`basename $DESTINATION`_$date"
 mkdir -p $full_destination
 
-# actual backup
-rsync -ra --delete $SOURCE $full_destination
-echo "Kopia zapasowa zapisana w $full_destination" 
-
 # remove all of the other backups made on the same day (except the one made now)
 foreach file ("$destination_directory`basename $DESTINATION`_$day_of_week*")
 	if ( $file != $full_destination ) then
 		rm -r $file
 	endif
 end
+
+# actual backup
+rsync -ra --delete $SOURCE $full_destination
+echo "Kopia zapasowa zapisana w $full_destination" 
 
 set end_time_nano=`date +%s%N`
 set end_time=`date +%H:%M:%S:%N`
