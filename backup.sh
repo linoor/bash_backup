@@ -2,14 +2,12 @@
 # Michał Pomarański
 # grupa nr 3
 
-# offering a choice of tar or rsync.
-# comparing the size of today's backup to yesterdays and sending the user an email of it changed significantly.
-# provide source and destination as arguments
+usage="$(basename "$0") [-h] [--help] [--source] [--dest] -- Program robiący kopię zapasową podanego folderu.\n
+Jako argumenty proszę podać folder, który ma zostać skopiowany oraz folder docelowy.
+Program sprawdza czy na dysku jest wystarczająco dużo wolnego miejsca, w przeciwnym wypadku powiadamia o tym użytkownika.
 
-SOURCE=~/Dev/Studia/
-DESTINATION=~/backup/Studia/
-
-usage="$(basename "$0") [-h] [--help] [--source] [--dest] -- Program robiący kopię zapasową podanego folderu. 
+Program może zostać uruchomiony jako zadanie cron (np.  0 22 * * * ./backup --source=folder --dest=folder2).
+Dzięki temu, skrypt będzie uruchamiany raz dziennie. Skrypt nadpisuje kopię zrobioną tego samego dnia (zachowuje jedną kopię dziennie).
 
 użycie:
     -h, --help - pomoc
