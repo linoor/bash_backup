@@ -79,6 +79,7 @@ echo "Starting backup at $start_time"
 # check for the available space before doing the backup
 available_space=$(df -k . --block-size=1K | sed -n '2p' | tr -s ' ' | cut -d ' ' -f 4)
 backup_space_needed=$(du -sb $SOURCE | cut -f1)
+backup_space_in_mb=$(du -sb $SOURCE --block-size=1M | cut -f1)
 if [[ "$backup_space_needed" -gt "$available_space" ]]
 then
 	zenity --error --text "There is not enough space left to do the backup of $SOURCE"
@@ -110,3 +111,4 @@ done
 end_time_nano=$(get_time_nanoseconds)
 end_time=$(get_time)
 echo "Backup finished. End time: $end_time. Time elapsed in nanoseconds: $(($end_time_nano-$start_time_nano))"
+echo "Skopiowano $backup_space_in_mb MB"
