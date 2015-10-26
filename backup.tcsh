@@ -65,7 +65,7 @@ endif
 
 ## backup
 echo "Tworzenie kopii zapasowej $SOURCE w $DESTINATION..."
-set date="`date +'%A-%Y-%m-%d:%H:%M:%S'`"
+set date="`date +'%A-%Y-%m-%d:%H:%M'`"
 set day_of_week="`date +'%A'`"
 set destination_directory="$DESTINATION"
 set full_destination="$destination_directory`basename $DESTINATION`_$date"
@@ -75,18 +75,16 @@ mkdir -p $full_destination
 rsync -ra --delete $SOURCE $full_destination
 echo "Kopia zapasowa zapisana w $full_destination" 
 
-## remove all of the other backups made on the same day (except the one made now)
-#for i in "$destination_directory$(basename $DESTINATION)_$day_of_week*"; do
-#	for file in $i; do
-#		if [[ $file != "$full_destination" ]]
-#		then
-#			rm -r $file
-#		fi
-#	done
-#done
-#
-#set end_time_nano=$(get_time_nanoseconds)
-#set end_time=$(get_time)
-#set elapsed=`echo "scale=8; $(($end_time_nano-$start_time_nano)) / 1000000000" | bc`
-#echo "Tworzenie kopii zakończone. Czas zakończenia kopiowania: $end_time. Czas kopiowania:  ${elapsed} sekund."
-#echo "Skopiowano $backup_space_in_mb MB"
+# remove all of the other backups made on the same day (except the one made now)
+foreach file ("$destination_directory`basename $DESTINATION`_$day_of_week*")
+	if ( $file != $full_destination ) then
+		rm -r $file
+	endif
+end
+
+set end_time_nano=`date +%s%N`
+set end_time=`date +%H:%M:%S:%N`
+set diff = `echo $end_time_nano-$start_time_nano | bc`
+set elapsed=`echo "scale=8; $diff / 1000000000" | bc`
+echo "Tworzenie kopii zakończone. Czas zakończenia kopiowania: $end_time. Czas kopiowania:  $elapsed sekund."
+echo "Skopiowano $backup_space_in_mb MB"
