@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/tcsh
 # Michał Pomarański
 # grupa nr 3
 

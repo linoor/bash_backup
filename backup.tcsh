@@ -15,8 +15,29 @@ użycie:\n\
 	--dest - folder, do którego ma być zrobiony backup.\n\
 "
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )"
-source $DIR/helper.tcsh
+foreach option ( $argv )
+	switch ($option)
+		case "--help":
+			echo $usage
+			breaksw
+		case "--h":
+			echo $usage
+			breaksw
+		case "-h":
+			echo $usage
+			breaksw
+		case "--source=*":
+			set src = `echo $option | awk -F= '{print $2}'`
+			breaksw
+		case "--dest=*":
+			set src = `echo $option | awk -F= '{print $2}'`
+			breaksw
+		case "-*":
+			echo "Niepoprawne argumenty\n\n"
+			echo $usage
+			exit 1
+	endsw
+end
 
 option="$1"
 for option in "$@"
