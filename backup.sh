@@ -7,7 +7,7 @@ Jako argumenty proszę podać folder, który ma zostać skopiowany oraz folder 
 Program sprawdza czy na dysku jest wystarczająco dużo wolnego miejsca, w przeciwnym wypadku powiadamia o tym użytkownika.
 
 Program może zostać uruchomiony jako zadanie cron (np.  0 22 * * * ./backup --source=folder --dest=folder2).
-Dzięki temu, skrypt będzie uruchamiany raz dziennie. Skrypt nadpisuje kopię zrobioną tego samego dnia (zachowuje jedną kopię dziennie).
+Dzięki temu, skrypt będzie uruchamiany raz dziennie. Skrypt nadpisuje kopię zrobioną tego samego dnia (zachowuje jedną kopię na jeden dzień tygodnia).
 
 użycie:
     -h, --help - pomoc
