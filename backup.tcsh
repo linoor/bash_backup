@@ -21,12 +21,15 @@ foreach option ( $argv )
 	switch ($option)
 		case "--help":
 			echo $usage
+			exit 1
 			breaksw
 		case "--h":
 			echo $usage
+			exit 1
 			breaksw
 		case "-h":
 			echo $usage
+			exit 1
 			breaksw
 		case "--source=*":
 			set src = `echo $option | awk -F= '{print $2}'`
