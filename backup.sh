@@ -15,6 +15,8 @@ użycie:
 	--dest - folder, do którego ma być zrobiony backup.
 "
 
+source ./helper.sh
+
 option="$1"
 for option in "$@"
 do
@@ -47,16 +49,6 @@ then
 	printf "BŁĄD! Katalog źródłowy nie istnieje." >&2
 	exit 1
 fi
-
-function get_time_nanoseconds() {
-	local result=$(date +%s%N)
-	echo $result
-}
-
-function get_time() {
-	local result=$(date +%H:%M:%S:%N)
-	echo $result
-}
 
 start_time_nano=$(get_time_nanoseconds)
 start_time=$(get_time)
