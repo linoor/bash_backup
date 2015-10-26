@@ -49,7 +49,7 @@ then
 fi
 
 function get_time_nanoseconds() {
-	local result=$(date +%N | sed 's/^0*//')
+	local result=$(date +%s%N)
 	echo $result
 }
 
@@ -96,5 +96,6 @@ done
 
 end_time_nano=$(get_time_nanoseconds)
 end_time=$(get_time)
-echo "Tworzenie kopii zakończone. Czas zakończenia kopiowania: $end_time. Czas kopiowania: $(($end_time_nano-$start_time_nano)) nanosekund"
+elapsed=`echo "scale=8; $(($end_time_nano-$start_time_nano)) / 1000000000" | bc`
+echo "Tworzenie kopii zakończone. Czas zakończenia kopiowania: $end_time. Czas kopiowania:  ${elapsed} sekund."
 echo "Skopiowano $backup_space_in_mb MB"
