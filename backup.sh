@@ -42,8 +42,8 @@ do
 	esac
 done
 
-SOURCE="$src"
-DESTINATION="$dest"
+SOURCE="$(pwd $src)"
+DESTINATION="$(pwd $dest)/"
 
 if [ ! -d "$SOURCE"  ]
 then
