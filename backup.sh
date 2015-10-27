@@ -42,8 +42,8 @@ do
 	esac
 done
 
-SOURCE="$(pwd $src)"
-DESTINATION="$(pwd $dest)/"
+SOURCE="$(readlink -f $src)"
+DESTINATION="$(readlink -f $dest)/"
 
 if [ ! -d "$SOURCE"  ]
 then

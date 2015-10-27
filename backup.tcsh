@@ -45,8 +45,8 @@ foreach option ( $argv )
 	endsw
 end
 
-set SOURCE="`pwd $src`"
-set DESTINATION="`pwd $dest`/"
+set SOURCE="`readlink -f $src`"
+set DESTINATION="`readlink -f $dest`/"
 
 if ( ! -d "$SOURCE"  ) then
 	printf "BŁĄD! Katalog źródłowy nie istnieje."
