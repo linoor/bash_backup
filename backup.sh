@@ -33,11 +33,9 @@ do
 		;;
 	--source*) 
 		src="$(echo "$@" | grep -Po "\-\-source [^\s]+" | grep -Po "(?<=\s).+")"
-		echo $src
 		;;
 	--dest*)
 		dest="$(echo "$@" | grep -Po "\-\-dest [^\s]+" | grep -Po "(?<=\s).+")"
-		echo $dest
 		;;
 	-*) printf "Niepoprawne argumenty\n\n" >&2
 	   printf "$usage" >&2
