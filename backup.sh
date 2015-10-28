@@ -31,9 +31,13 @@ do
 	--h) printf "$usage"
 		exit
 		;;
-	--source=*) src="${option#*=}"
+	--source*) 
+		src="$(echo "$@" | grep -Po "\-\-source (.+?)" | grep -Po "(?<=\s).+")"
+		echo $src
 		;;
-	--dest=*) dest="${option#*=}"
+	--dest*)
+		dest="$(echo "$@" | grep -Po "\-\-dest (.+?)" | grep -Po "(?<=\s).+")"
+		echo $dest
 		;;
 	-*) printf "Niepoprawne argumenty\n\n" >&2
 	   printf "$usage" >&2
