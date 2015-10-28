@@ -31,11 +31,11 @@ foreach option ( $argv )
 			echo $usage
 			exit 1
 			breaksw
-		case "--source=*":
-			set src = `echo $option | awk -F= '{print $2}'`
+		case "--source*":
+			set src = `echo $argv | grep -Po "\-\-source [^\s]+" | grep -Po "(?<=\s).+"`
 			breaksw
-		case "--dest=*":
-			set dest = `echo $option | awk -F= '{print $2}'`
+		case "--dest*":
+			set dest = `echo $argv | grep -Po "\-\-dest [^\s]+" | grep -Po "(?<=\s).+"`
 			breaksw
 		case "-*":
 			echo "Niepoprawne argumenty\n\n"
