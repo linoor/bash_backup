@@ -32,11 +32,11 @@ do
 		exit
 		;;
 	--source*) 
-		src="$(echo "$@" | grep -Po "\-\-source (.+?)" | grep -Po "(?<=\s).+")"
+		src="$(echo "$@" | grep -Po "\-\-source [^\s]+" | grep -Po "(?<=\s).+")"
 		echo $src
 		;;
 	--dest*)
-		dest="$(echo "$@" | grep -Po "\-\-dest (.+?)" | grep -Po "(?<=\s).+")"
+		dest="$(echo "$@" | grep -Po "\-\-dest [^\s]+" | grep -Po "(?<=\s).+")"
 		echo $dest
 		;;
 	-*) printf "Niepoprawne argumenty\n\n" >&2
