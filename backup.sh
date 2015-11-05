@@ -31,6 +31,16 @@ do
 	--h) printf "$usage"
 		exit
 		;;
+	--remote-src)
+		is_remote=true
+		is_remote_src=true
+		remote_src="$(echo "$@" | grep -Po "\-\-remote-src [^\s]+" | grep -Po "(?<=\s).+")"
+		;;
+	--remote-dest)
+		is_remote=true
+		is_remote_dest=true
+		remote_dest="$(echo "$@" | grep -Po "\-\-remote-dest [^\s]+" | grep -Po "(?<=\s).+")"
+		;;
 	--source*) 
 		src="$(echo "$@" | grep -Po "\-\-source [^\s]+" | grep -Po "(?<=\s).+")"
 		;;
