@@ -57,10 +57,32 @@ done
 SOURCE="$(readlink -f $src)"
 DESTINATION="$(readlink -f $dest)/"
 
-if [ ! -d "$SOURCE"  ]
+remote_command_src=""
+remote_command_dest=""
+if $is_remote
 then
-	printf "BŁĄD! Katalog źródłowy nie istnieje." >&2
-	exit 1
+	remote_command_src="ssh $remote_src"
+	remote_command_dest="ssh $remote_dest"
+fi
+
+echo "remote command"
+echo "$remote_command_src"
+
+if $is_remote
+then
+	if ($remote_command_src "test -d $src")
+	then
+		echo "test"
+	else
+		printf "BŁĄD! Katalog źródłowy nie istnieje." >&2
+		exit 1
+	fi
+else
+	if [ ! -d "$SOURCE"  ]
+	then
+		printf "BŁĄD! Katalog źródłowy nie istnieje." >&2
+		exit 1
+	fi
 fi
 
 start_time_nano=$(get_time_nanoseconds)
