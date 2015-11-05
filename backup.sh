@@ -18,6 +18,10 @@ użycie:
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )"
 source $DIR/helper.sh
 
+is_remote=false
+is_remote_src=false
+is_remote_dest=false
+
 option="$1"
 for option in "$@"
 do
@@ -54,19 +58,29 @@ do
 	esac
 done
 
-SOURCE="$(readlink -f $src)"
-DESTINATION="$(readlink -f $dest)/"
-
 remote_command_src=""
 remote_command_dest=""
-if $is_remote
+if $is_remote_src
 then
 	remote_command_src="ssh $remote_src"
+fi
+
+if $is_remote_dest
+then
 	remote_command_dest="ssh $remote_dest"
 fi
 
 echo "remote command"
 echo "$remote_command_src"
+
+if ! $is_remote
+then
+	SOURCE="$(readlink -f $src)"
+	DESTINATION="$(readlink -f $dest)/"
+else
+	SOURCE="$src"
+	DESTINATION="$dest/"
+fi
 
 if $is_remote
 then
@@ -90,9 +104,11 @@ start_time=$(get_time)
 echo "Rozpoczęcie kopiowania o godz. $start_time"
 
 # check for the available space before doing the backup
-available_space=$(df -k . --block-size=1K | sed -n '2p' | tr -s ' ' | cut -d ' ' -f 4)
-backup_space_needed=$(du -sb $SOURCE | cut -f1)
-backup_space_in_mb=$(du -sb $SOURCE --block-size=1M | cut -f1)
+available_space=$($remote_command_dest df -k $DESTINATION --block-size=1K | sed -n '2p' | tr -s ' ' | cut -d ' ' -f 4)
+echo "source"
+echo $SOURCE
+backup_space_needed=$($remote_command_src du -sb $SOURCE | cut -f1)
+backup_space_in_mb=$($remote_command_src du -sb $SOURCE --block-size=1M | cut -f1)
 if [[ "$backup_space_needed" -gt "$available_space" ]]
 then
 	zenity --error --text "Na dysku nie ma wystarczającej ilości wolnego miejsca w $SOURCE"
