@@ -104,7 +104,7 @@ start_time=$(get_time)
 echo "Rozpoczęcie kopiowania o godz. $start_time"
 
 # check for the available space before doing the backup
-available_space=$($remote_command_dest df -k $DESTINATION --block-size=1K | sed -n '2p' | tr -s ' ' | cut -d ' ' -f 4)
+available_space=$($remote_command_dest df $DESTINATION | sed -n '2p' | awk '{print $4}')
 echo "source"
 echo $SOURCE
 backup_space_needed=$($remote_command_src du -sb $SOURCE | cut -f1)
