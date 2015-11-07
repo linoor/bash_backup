@@ -135,16 +135,9 @@ for i in "$destination_directory$(basename $DESTINATION)_$day_of_week*"; do
 	for file in $i; do
 		if [[ $file != "$full_destination" ]]
 		then
-			if $is_remote
+			if $is_remote_dest
 			then
-				if $is_remote_dest
-				then
-					$remote_command_dest rm -r $file
-				fi
-				if $is_remote_src
-				then
-					$remote_command_src rm -r $file
-				fi
+				$remote_command_dest rm -r $file
 			else
 				rm -r $file
 			fi
