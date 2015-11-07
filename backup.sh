@@ -82,7 +82,7 @@ else
 	DESTINATION="$(readlink -f $dest)/"
 fi
 
-if $is_remote
+if $is_remote_src
 then
 	if ($remote_command_src "test -d $src")
 	then
@@ -98,6 +98,9 @@ else
 		exit 1
 	fi
 fi
+
+# tworzenie katalogu docelowego jeżeli nie istnieje
+mkdir -p $remote_command_dest $full_destination
 
 start_time_nano=$(get_time_nanoseconds)
 start_time=$(get_time)
@@ -121,7 +124,6 @@ date="$(date +'%A-%Y-%m-%d:%H:%M:%S')"
 day_of_week="$(date +'%A')"
 destination_directory="$DESTINATION"
 full_destination="$destination_directory$(basename $DESTINATION)_$date"
-mkdir -p $remote_command_dest $full_destination
 
 if $is_remote_src
 then
