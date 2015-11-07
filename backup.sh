@@ -70,9 +70,6 @@ then
 	remote_command_dest="ssh $remote_dest"
 fi
 
-echo "remote command"
-echo "$remote_command_src"
-
 if $is_remote
 then
 	SOURCE="$src"
@@ -86,7 +83,7 @@ if $is_remote_src
 then
 	if ($remote_command_src "test -d $src")
 	then
-		echo "test"
+		echo ""
 	else
 		printf "BŁĄD! Katalog źródłowy nie istnieje." >&2
 		exit 1
@@ -108,13 +105,11 @@ echo "Rozpoczęcie kopiowania o godz. $start_time"
 
 # check for the available space before doing the backup
 backup_available_space=$($remote_command_dest df $DESTINATION | sed -n '2p' | awk '{print $4}')
-echo "source"
-echo $SOURCE
 backup_space_needed=$($remote_command_src du -sb $SOURCE | cut -f1)
 backup_space_in_mb=$($remote_command_src du -sb $SOURCE --block-size=1M | cut -f1)
 if [[ "$backup_space_needed" -gt "$backup_available_space" ]]
 then
-	zenity --error --text "Na dysku nie ma wystarczającej ilości wolnego miejsca w $SOURCE"
+#	zenity --error --text "Na dysku nie ma wystarczającej ilości wolnego miejsca w $SOURCE"
 	exit
 fi
 
@@ -128,18 +123,15 @@ full_destination="$destination_directory$(basename $DESTINATION)_$date"
 if $is_remote_src
 then
 	SOURCE="${remote_src}:$SOURCE"
-	echo "echo new source"
-	echo $SOURCE
 fi
 
 if $is_remote_dest
 then
 	full_destination="$remote_dest:$full_destination"
-	echo "echo new dest"
-	echo $full_destination
 fi
 
 # actual backup
+echo "full destination $full_destination"
 rsync -ra --delete $SOURCE $full_destination
 echo "Kopia zapasowa zapisana w $full_destination" 
 
