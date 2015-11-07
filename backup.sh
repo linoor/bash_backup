@@ -126,24 +126,11 @@ then
 	full_destination_rsync="$remote_dest:$full_destination"
 fi
 
+find $dest -type d -name "$(basename $DESTINATION)_$day_of_week*" -exec rm -r "{}" \; >> /dev/null 2>&1
+
 # actual backup
 rsync -ra --delete $SOURCE $full_destination_rsync --quiet
 echo "Kopia zapasowa zapisana w $full_destination" 
-
-# remove all of the other backups made on the same day (except the one made now)
-for i in "$destination_directory$(basename $DESTINATION)_$day_of_week*"; do
-	for file in $i; do
-		if [[ $file != "$full_destination" ]]
-		then
-			if $is_remote_dest
-			then
-				$remote_command_dest rm -r $file
-			else
-				rm -r $file
-			fi
-		fi
-	done
-done
 
 end_time_nano=$(get_time_nanoseconds)
 end_time=$(get_time)
