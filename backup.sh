@@ -70,14 +70,8 @@ then
 	remote_command_dest="ssh $remote_dest"
 fi
 
-if $is_remote
-then
-	SOURCE="$src"
-	DESTINATION="$dest"
-else
-	SOURCE="$(readlink -f $src)"
-	DESTINATION="$(readlink -f $dest)/"
-fi
+SOURCE="$($remote_command_src readlink -f $src)"
+DESTINATION="$($remote_command_dest readlink -f $dest)/"
 
 if $is_remote_src
 then
@@ -96,22 +90,9 @@ else
 	fi
 fi
 
-# tworzenie katalogu docelowego jeżeli nie istnieje
-mkdir -p $remote_command_dest $full_destination
-
 start_time_nano=$(get_time_nanoseconds)
 start_time=$(get_time)
 echo "Rozpoczęcie kopiowania o godz. $start_time"
-
-# check for the available space before doing the backup
-backup_available_space=$($remote_command_dest df $DESTINATION | sed -n '2p' | awk '{print $4}')
-backup_space_needed=$($remote_command_src du -sb $SOURCE | cut -f1)
-backup_space_in_mb=$($remote_command_src du -sb $SOURCE --block-size=1M | cut -f1)
-if [[ "$backup_space_needed" -gt "$backup_available_space" ]]
-then
-#	zenity --error --text "Na dysku nie ma wystarczającej ilości wolnego miejsca w $SOURCE"
-	exit
-fi
 
 # backup
 echo "Tworzenie kopii zapasowej $SOURCE w ${DESTINATION}..."
@@ -120,6 +101,21 @@ day_of_week="$(date +'%A')"
 destination_directory="$DESTINATION"
 full_destination="$destination_directory$(basename $DESTINATION)_$date"
 
+# tworzenie katalogu docelowego jeżeli nie istnieje
+$remote_command_dest mkdir -p $full_destination
+
+# check for the available space before doing the backup
+backup_available_space=$($remote_command_dest df $DESTINATION | sed -n '2p' | awk '{print $4}')
+backup_space_needed=$($remote_command_src du -sb $SOURCE | cut -f1)
+backup_space_in_mb=$($remote_command_src du -sb $SOURCE --block-size=1M | cut -f1)
+if [[ "$backup_space_needed" -gt "$backup_available_space" ]]
+then
+	zenity --error --text "Na dysku nie ma wystarczającej ilości wolnego miejsca w $SOURCE"
+	exit
+fi
+
+full_destination_rsync=$full_destination
+
 if $is_remote_src
 then
 	SOURCE="${remote_src}:$SOURCE"
@@ -127,12 +123,11 @@ fi
 
 if $is_remote_dest
 then
-	full_destination="$remote_dest:$full_destination"
+	full_destination_rsync="$remote_dest:$full_destination"
 fi
 
 # actual backup
-echo "full destination $full_destination"
-rsync -ra --delete $SOURCE $full_destination
+rsync -ra --delete $SOURCE $full_destination_rsync --quiet
 echo "Kopia zapasowa zapisana w $full_destination" 
 
 # remove all of the other backups made on the same day (except the one made now)
@@ -140,7 +135,19 @@ for i in "$destination_directory$(basename $DESTINATION)_$day_of_week*"; do
 	for file in $i; do
 		if [[ $file != "$full_destination" ]]
 		then
-			rm -r $file
+			if $is_remote
+			then
+				if $is_remote_dest
+				then
+					$remote_command_dest rm -r $file
+				fi
+				if $is_remote_src
+				then
+					$remote_command_src rm -r $file
+				fi
+			else
+				rm -r $file
+			fi
 		fi
 	done
 done
