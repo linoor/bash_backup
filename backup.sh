@@ -73,13 +73,13 @@ fi
 echo "remote command"
 echo "$remote_command_src"
 
-if ! $is_remote
+if $is_remote
 then
+	SOURCE="$src"
+	DESTINATION="$dest"
+else
 	SOURCE="$(readlink -f $src)"
 	DESTINATION="$(readlink -f $dest)/"
-else
-	SOURCE="$src"
-	DESTINATION="$dest/"
 fi
 
 if $is_remote
@@ -104,12 +104,12 @@ start_time=$(get_time)
 echo "Rozpoczęcie kopiowania o godz. $start_time"
 
 # check for the available space before doing the backup
-available_space=$($remote_command_dest df $DESTINATION | sed -n '2p' | awk '{print $4}')
+backup_available_space=$($remote_command_dest df $DESTINATION | sed -n '2p' | awk '{print $4}')
 echo "source"
 echo $SOURCE
 backup_space_needed=$($remote_command_src du -sb $SOURCE | cut -f1)
 backup_space_in_mb=$($remote_command_src du -sb $SOURCE --block-size=1M | cut -f1)
-if [[ "$backup_space_needed" -gt "$available_space" ]]
+if [[ "$backup_space_needed" -gt "$backup_available_space" ]]
 then
 	zenity --error --text "Na dysku nie ma wystarczającej ilości wolnego miejsca w $SOURCE"
 	exit
@@ -121,7 +121,21 @@ date="$(date +'%A-%Y-%m-%d:%H:%M:%S')"
 day_of_week="$(date +'%A')"
 destination_directory="$DESTINATION"
 full_destination="$destination_directory$(basename $DESTINATION)_$date"
-mkdir -p $full_destination
+mkdir -p $remote_command_dest $full_destination
+
+if $is_remote_src
+then
+	SOURCE="${remote_src}:$SOURCE"
+	echo "echo new source"
+	echo $SOURCE
+fi
+
+if $is_remote_dest
+then
+	full_destination="$remote_dest:$full_destination"
+	echo "echo new dest"
+	echo $full_destination
+fi
 
 # actual backup
 rsync -ra --delete $SOURCE $full_destination
