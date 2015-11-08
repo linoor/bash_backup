@@ -2,17 +2,25 @@
 # Michał Pomarański
 # grupa nr 3
 
-usage="$(basename "$0") [-h] [--help] [--source] [--dest] -- Program robiący kopię zapasową podanego folderu.\n
+usage="$(basename "$0") [-h] [--help] [--remote-dest] [--remote-src] [--source] [--dest] -- Program robiący kopię zapasową podanego folderu.\n
 Jako argumenty proszę podać folder, który ma zostać skopiowany oraz folder docelowy.
 Program sprawdza czy na dysku jest wystarczająco dużo wolnego miejsca, w przeciwnym wypadku powiadamia o tym użytkownika.
 
 Program może zostać uruchomiony jako zadanie cron (np.  0 22 * * * ./backup --source=folder --dest=folder2).
 Dzięki temu, skrypt będzie uruchamiany raz dziennie. Skrypt nadpisuje kopię zrobioną tego samego dnia (zachowuje jedną kopię na jeden dzień tygodnia).
 
+Przykład kopiowania z serwera zewnętrznego:
+— ./backup.sh --remote-src localhost --source /home/some_folder --dest /home/backups
+— ./backup.sh --remote-dest localhost --dest /home/backup --source /home/some_folder
+
+Proszę używać pełnych ścieżek w przypadku serwerów zewnętrznych.
+
 użycie:
-    -h, --help - pomoc
-	--source - folder, który ma zostać skopiowany.
-	--dest - folder, do którego ma być zrobiony backup.
+    -h, --help → pomoc
+	--source → folder, który ma zostać skopiowany.
+	--dest → folder, do którego ma być zrobiony backup.
+	--remote-src → adres serwera, na którym znajdziemy folder źródłowy
+	--remote-dest → adres serwera, na którym znajdziemy folder docelowy
 "
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )"
