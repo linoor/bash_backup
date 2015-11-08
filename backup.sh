@@ -151,8 +151,8 @@ then
 fi
 
 pattern="$($remote_command_dest basename $DESTINATION)_$day_of_week*"
-$remote_command_dest find $dest -path "*$pattern*" -delete # >> /dev/null 2>&1
-$remote_command_dest find $dest -type d -name "$pattern" -delete # >> /dev/null 2>&1
+$remote_command_dest find $dest -path "*$pattern*" -delete >> /dev/null 2>&1
+$remote_command_dest find $dest -type d -name "$pattern" -delete >> /dev/null 2>&1
 
 # actual backup
 rsync -ra --delete $SOURCE $full_destination_rsync --quiet
