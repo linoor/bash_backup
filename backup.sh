@@ -70,8 +70,24 @@ then
 	remote_command_dest="ssh $remote_dest"
 fi
 
-SOURCE="$($remote_command_src readlink -f $src)"
-DESTINATION="$($remote_command_dest readlink -f $dest)/"
+echo $src
+
+if ! $is_remote_src
+then
+	SOURCE="$(readlink -f $src)"
+else
+	SOURCE="$src"
+fi
+
+if ! $is_remote_dest
+then
+	DESTINATION="$(readlink -f $dest)/"
+else
+	DESTINATION="$dest/"
+fi
+
+echo "SOURCE $SOURCE"
+echo "DESTINATION $DESTINATION"
 
 if $is_remote_src
 then
@@ -126,7 +142,9 @@ then
 	full_destination_rsync="$remote_dest:$full_destination"
 fi
 
-find $dest -type d -name "$(basename $DESTINATION)_$day_of_week*" -exec rm -r "{}" \; >> /dev/null 2>&1
+pattern="$($remote_command_dest basename $DESTINATION)_$day_of_week*"
+$remote_command_dest find $dest -path "*$pattern*" -delete # >> /dev/null 2>&1
+$remote_command_dest find $dest -type d -name "$pattern" -delete # >> /dev/null 2>&1
 
 # actual backup
 rsync -ra --delete $SOURCE $full_destination_rsync --quiet
